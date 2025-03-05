@@ -19,7 +19,7 @@ The focus with this activity is building out a server, employing http, persistin
     - Delete an Item
         - DELETE
 - The Item
-    - Name
+    - Item Name
     - Price
     - Quantity
     - Purchased
