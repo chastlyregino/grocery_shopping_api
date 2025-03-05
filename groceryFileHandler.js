@@ -5,9 +5,10 @@ This file handles all fs functions and object handling needed
 const fs = require('node:fs');
 
 
-let data = {}
+let data = {grocery_list:[]}
+
 const item = () => {
-    this.gname = gname,
+    this.itemName = itemName,
     this.quantity = quantity,
     this.price = price,
     this.purchased = purchased
@@ -60,7 +61,7 @@ const addNewContent = (item) => {
 
 // remove a specific item on the list
 const removeSpecificContent = (name) => {
-    data.grocery_list = data.grocery_list.filter((item) => item.name !== name)
+    data.grocery_list = data.grocery_list.filter((item) => item.itemName !== name)
     console.log('Content is removed! Idempotent.')
 
     writeContents(data)
@@ -70,7 +71,7 @@ const removeSpecificContent = (name) => {
 const toPurchase = (name) => {
     data.grocery_list = data.grocery_list
                         .map((item) => {
-                            if (item.name === name) {
+                            if (item.itemName === name) {
                                 item.purchased = true
                             }
                             return item
@@ -81,7 +82,6 @@ const toPurchase = (name) => {
 }
 
 module.exports = {
-    data,
     item,
     createFileIfNotExist,
     readContents,

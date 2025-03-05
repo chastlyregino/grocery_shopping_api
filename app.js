@@ -1,6 +1,5 @@
 const { logger } = require('./util/logger.js')
 const { item, createFileIfNotExist, readContents, addNewContent, removeSpecificContent, toPurchase } = require('./groceryFileHandler.js')
-//const { data, createFileIfNotExist, readContents } = require('./groceryFileHandler.js')
 const http = require('http')
 
 const PORT = 3000
@@ -22,7 +21,7 @@ const server = http.createServer((req, res) => {
                 logger.info(req.url.split('/'))
                 let index = parseInt(req.url.split('/')[2]);
                 createFileIfNotExist()
-                const { name, quantity, price } = body
+                const { itemName, quantity, price } = body
 
                 switch(req.method){
                     case 'GET':
@@ -30,29 +29,36 @@ const server = http.createServer((req, res) => {
                         res.end(JSON.stringify({message: readContents()}))
                         break
                         
-                    // case 'POST':
-                    //     
-                    //     if (!name || !quantity || !price){
-                    //         res.writeHead(400, contentType)
-                    //         res.end(
-                    //             JSON.stringify({
-                    //                 message: 'Please provide a valid name and price'
-                    //             })
-                    //         )
-                    //     } else {
-                    //         res.end(
-                    //             JSON.stringify({
-                    //                 message: 'Item Added to List!',
-                    //                 name,
-                    //                 quantity,
-                    //                 price
-                    //             })
-                    //         )
-                    //     }
-                    //     break
+                    case 'POST':
+                        
+                        if (!itemName|| !quantity || !price){
+                            res.writeHead(400, contentType)
+                            res.end(
+                                JSON.stringify({
+                                    message: 'Please provide a valid name, quantity, and price'
+                                })
+                            )
+                        } else {
+                            const itemObject = Object.create(item)
+                            itemObject.itemName = itemName,
+                            itemObject.quantity = quantity
+                            itemObject.price = price
+                            itemObject.purchase = false
+                            addNewContent(itemObject)
+
+                            //data = readContents()
+                            res.end(
+                                JSON.stringify({
+                                    message: 'Item Added to List!',
+                                    itemObject//,
+                                    //data
+                                })
+                            )
+                        }
+                        break
 
                     case 'PUT':
-                        toPurchase(name)
+                        toPurchase(itemName)
                         data = readContents()
                         res.statusCode = 200
                         res.end(JSON.stringify({
@@ -60,7 +66,7 @@ const server = http.createServer((req, res) => {
                         break
 
                     case 'DELETE':
-                        removeSpecificContent(name)
+                        removeSpecificContent(itemName)
                         data = readContents()
                         res.statusCode = 200
                         res.end(JSON.stringify({
