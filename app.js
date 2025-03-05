@@ -1,5 +1,5 @@
 const { logger } = require('./util/logger.js')
-const { data, item, createFileIfNotExist, readContents, addNewContent, removeSpecificContent, toPurchase } = require('./groceryFileHandler.js')
+const { item, createFileIfNotExist, readContents, addNewContent, removeSpecificContent, toPurchase } = require('./groceryFileHandler.js')
 //const { data, createFileIfNotExist, readContents } = require('./groceryFileHandler.js')
 const http = require('http')
 
@@ -7,6 +7,7 @@ const PORT = 3000
 
 const server = http.createServer((req, res) => {
     let body = ''
+    let data = {}
 
     req
         .on('data', (chunk) => {
@@ -52,9 +53,10 @@ const server = http.createServer((req, res) => {
                     case 'DELETE':
                         let { name } = body
                         removeSpecificContent(name)
+                        data = readContents()
                         res.statusCode = 200
                         res.end(JSON.stringify({
-                            message: `Item deleted from the list!Updated List: readContents()` + readContents()}))
+                            message: `Item deleted from the list! Updated List: `, data}))
                         break
                     default:
                         res.statusCode = 405 // method not allowed
