@@ -2,8 +2,8 @@
 This file handles all fs functions and object handling needed
 */
 
+const { logger } = require('./util/logger.js')
 const fs = require('node:fs');
-
 
 let data = {grocery_list:[]}
 
@@ -18,53 +18,47 @@ const item = () => {
 const createFileIfNotExist = () => {
     if (fs.existsSync('data.json')) {
         data = JSON.parse(fs.readFileSync('data.json', 'utf8'))
-        console.log('File exists')
+        logger.info(`File exists`)
     } else {
-        console.log('File does not exist')
-        writeContents(data)
-        console.log('File created!')
+        logger.info(`File does not exist`)
+        writeItems(data)
+        logger.info(`File created!`)
     }
 }
 
-// write contents to file
-const writeContents = (contents) => {
-    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
+// write Items to file
+const writeItems = (items) => {
+    fs.writeFileSync('data.json', JSON.stringify(items), 'utf8', (err) => {
         if(err){
-            console.error(err);
-            return;
+            console.error(err)
+            return
         }
-        console.log('Write in file');
+        logger.info(`Write in file`)
     })
 }
 
 
-// reads the contents of data.json
-const readContents = () => {
+// reads the Items of data.json
+const readItems = () => {
     data = JSON.parse(fs.readFileSync('data.json', 'utf8'))
-    console.log('Contents read!')
+    logger.info(`Items read!`)
     return data
 }
 
 // add new item to the list
-const addNewContent = (item) => {
+const addNewItem = (item) => {
     data.grocery_list.push(item)
-    console.log('New content added!')
+    logger.info(`New item added!`)
 
-    fs.writeFileSync("data.json", JSON.stringify(data), 'utf8', (err) => {
-        if(err){
-            console.error(err);
-            return;
-        }
-        console.log("Data updated");
-    })
+    writeItems(data)
 }
 
 // remove a specific item on the list
-const removeSpecificContent = (name) => {
+const removeSpecificItem = (name) => {
     data.grocery_list = data.grocery_list.filter((item) => item.itemName !== name)
-    console.log('Content is removed! Idempotent.')
+    logger.info(`Item is removed! Idempotent.`)
 
-    writeContents(data)
+    writeItems(data)
 }
 
 // to set purchase to true of a specific item
@@ -76,16 +70,16 @@ const toPurchase = (name) => {
                             }
                             return item
                         })
-    console.log('Content was purchased! Idempotent.')
+    logger.info(`Item was purchased! Idempotent.`)
 
-    writeContents(data)
+    writeItems(data)
 }
 
 module.exports = {
     item,
     createFileIfNotExist,
-    readContents,
-    addNewContent,
-    removeSpecificContent,
+    readItems,
+    addNewItem,
+    removeSpecificItem,
     toPurchase
 }

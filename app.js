@@ -1,5 +1,9 @@
+/* 
+This file handles all HTTP requests and response.
+*/
+
 const { logger } = require('./util/logger.js')
-const { item, createFileIfNotExist, readContents, addNewContent, removeSpecificContent, toPurchase } = require('./groceryFileHandler.js')
+const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('./groceryFileHandler.js')
 const http = require('http')
 
 const PORT = 3000
@@ -16,22 +20,24 @@ const server = http.createServer((req, res) => {
             body = body.length > 0 ? JSON.parse(body) : {}
 
             const contentType = {'Content-Type': 'application/json'}
+            const { itemName, quantity, price } = body
 
             if (req.url.startsWith('/items')){
                 logger.info(req.url.split('/'))
-                let index = parseInt(req.url.split('/')[2]);
+                //const itemToUpdate = req.url.split('/')[2]
                 createFileIfNotExist()
-                const { itemName, quantity, price } = body
 
                 switch(req.method){
                     case 'GET':
+                        data = readItems()
+                        logger.info(`GET method display items`)
                         res.statusCode = 200
-                        res.end(JSON.stringify({message: readContents()}))
-                        break
+                        res.end(JSON.stringify({message: data}))
+                    break
                         
                     case 'POST':
-                        
-                        if (!itemName|| !quantity || !price){
+                        if (!itemName || !quantity || !price){
+                            logger.info(`POST method failed! Missing info`)
                             res.writeHead(400, contentType)
                             res.end(
                                 JSON.stringify({
@@ -40,45 +46,54 @@ const server = http.createServer((req, res) => {
                             )
                         } else {
                             const itemObject = Object.create(item)
-                            itemObject.itemName = itemName,
+                            itemObject.itemName = itemName.toLowerCase(),
                             itemObject.quantity = quantity
                             itemObject.price = price
-                            itemObject.purchase = false
-                            addNewContent(itemObject)
+                            itemObject.purchased = false
+                            addNewItem(itemObject)
 
-                            //data = readContents()
                             res.end(
                                 JSON.stringify({
                                     message: 'Item Added to List!',
-                                    itemObject//,
-                                    //data
+                                    itemObject
                                 })
                             )
+
+                            logger.info(`POST method info added: ${itemName}, ${quantity}, ${price}`)
                         }
-                        break
+                    break
 
                     case 'PUT':
-                        toPurchase(itemName)
-                        data = readContents()
+                        toPurchase(itemName.toLowerCase())
+                        data = readItems()
+
                         res.statusCode = 200
                         res.end(JSON.stringify({
-                            message: `Item is marked as purchased! Updated List: `, data}))
-                        break
+                            message: `Item is marked as purchased! Updated List: `, data
+                        }))
+
+                        logger.info(`PUT method item updated: ${itemName}`)
+                    break
 
                     case 'DELETE':
-                        removeSpecificContent(itemName)
-                        data = readContents()
+                        removeSpecificItem(itemName.toLowerCase())
+                        data = readItems()
+
                         res.statusCode = 200
                         res.end(JSON.stringify({
-                            message: `Item deleted from the list! Updated List: `, data}))
-                        break
+                            message: `Item deleted from the list! Updated List: `, data
+                        }))
+
+                        logger.info(`DELETE method item removed: ${itemName}`)
+                    break
 
                     default:
                         res.statusCode = 405 // method not allowed
-                        res.end(JSON.stringify({message: "Method not supported"}))
-                        break
+                        res.end(JSON.stringify({message: 'Method not supported'}))
+
+                        logger.info(`Method not supported`)
+                    break
                 }
-            
             }
         })
 })
