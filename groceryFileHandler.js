@@ -20,13 +20,8 @@ const createFileIfNotExist = () => {
         console.log('File exists')
     } else {
         console.log('File does not exist')
-        fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
-            if(err){
-                console.error(err);
-                return;
-            }
-            console.log('File created!');
-        })
+        writeContents(data)
+        console.log('File created!')
     }
 }
 
