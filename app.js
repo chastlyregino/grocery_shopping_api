@@ -22,14 +22,16 @@ const server = http.createServer((req, res) => {
                 logger.info(req.url.split('/'))
                 let index = parseInt(req.url.split('/')[2]);
                 createFileIfNotExist()
+                const { name, quantity, price } = body
 
                 switch(req.method){
                     case 'GET':
                         res.statusCode = 200
                         res.end(JSON.stringify({message: readContents()}))
                         break
+                        
                     // case 'POST':
-                    //     const { name, quantity, price } = body
+                    //     
                     //     if (!name || !quantity || !price){
                     //         res.writeHead(400, contentType)
                     //         res.end(
@@ -48,16 +50,23 @@ const server = http.createServer((req, res) => {
                     //         )
                     //     }
                     //     break
-                    // case 'PUT':
-                    //     break
+
+                    case 'PUT':
+                        toPurchase(name)
+                        data = readContents()
+                        res.statusCode = 200
+                        res.end(JSON.stringify({
+                            message: `Item is marked as purchased! Updated List: `, data}))
+                        break
+
                     case 'DELETE':
-                        let { name } = body
                         removeSpecificContent(name)
                         data = readContents()
                         res.statusCode = 200
                         res.end(JSON.stringify({
                             message: `Item deleted from the list! Updated List: `, data}))
                         break
+
                     default:
                         res.statusCode = 405 // method not allowed
                         res.end(JSON.stringify({message: "Method not supported"}))

@@ -30,6 +30,17 @@ const createFileIfNotExist = () => {
     }
 }
 
+// write contents to file
+const writeContents = (contents) => {
+    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
+        if(err){
+            console.error(err);
+            return;
+        }
+        console.log('Write in file');
+    })
+}
+
 
 // reads the contents of data.json
 const readContents = () => {
@@ -57,32 +68,21 @@ const removeSpecificContent = (name) => {
     data.grocery_list = data.grocery_list.filter((item) => item.name !== name)
     console.log('Content is removed! Idempotent.')
 
-    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
-        if(err){
-            console.error(err)
-            return
-        }
-        console.log('Data updated')
-    })
+    writeContents(data)
 }
 
 // to set purchase to true of a specific item
 const toPurchase = (name) => {
     data.grocery_list = data.grocery_list
                         .map((item) => {
-                            if (item.gname === name) {
+                            if (item.name === name) {
                                 item.purchased = true
                             }
+                            return item
                         })
     console.log('Content was purchased! Idempotent.')
 
-    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
-        if(err){
-            console.error(err);
-            return;
-        }
-        console.log('Data updated');
-    })
+    writeContents(data)
 }
 
 module.exports = {
