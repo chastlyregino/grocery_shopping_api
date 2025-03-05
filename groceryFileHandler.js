@@ -34,6 +34,8 @@ const createFileIfNotExist = () => {
 // reads the contents of data.json
 const readContents = () => {
     data = JSON.parse(fs.readFileSync('data.json', 'utf8'))
+    console.log('Contents read!')
+    return data
 }
 
 // add new item to the list
@@ -52,15 +54,15 @@ const addNewContent = (item) => {
 
 // remove a specific item on the list
 const removeSpecificContent = (name) => {
-    data.grocery_list = data.grocery_list.filter((item) => item.gname !== name)
+    data.grocery_list = data.grocery_list.filter((item) => item.name !== name)
     console.log('Content is removed! Idempotent.')
 
-    fs.writeFileSync("data.json", JSON.stringify(data), 'utf8', (err) => {
+    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
         if(err){
-            console.error(err);
-            return;
+            console.error(err)
+            return
         }
-        console.log("Data updated");
+        console.log('Data updated')
     })
 }
 
@@ -74,12 +76,12 @@ const toPurchase = (name) => {
                         })
     console.log('Content was purchased! Idempotent.')
 
-    fs.writeFileSync("data.json", JSON.stringify(data), 'utf8', (err) => {
+    fs.writeFileSync('data.json', JSON.stringify(data), 'utf8', (err) => {
         if(err){
             console.error(err);
             return;
         }
-        console.log("Data updated");
+        console.log('Data updated');
     })
 }
 
@@ -91,5 +93,4 @@ module.exports = {
     addNewContent,
     removeSpecificContent,
     toPurchase
-
 }

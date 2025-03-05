@@ -1,4 +1,6 @@
-const { data, readContents } = require('./groceryFileHandler.js')
+const { data, item, createFileIfNotExist, readContents, addNewContent, removeSpecificContent, toPurchase } = require('./groceryFileHandler.js')
 
-//readContents()
-console.log(data)
+let test = readContents()
+removeSpecificContent("apple")
+test = readContents()
+console.log(test)
