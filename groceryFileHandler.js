@@ -6,7 +6,6 @@ const { logger } = require('./util/logger.js')
 const fs = require('node:fs')
 
 let data = {grocery_list:[]}
-let fileWritten = false
 
 const item = () => {
     this.itemName = itemName,
@@ -33,11 +32,10 @@ const writeItems = (items, file) => {
     fs.writeFileSync(file, JSON.stringify(items), 'utf8', (err) => {
         if(err){
             console.error(err)
-            return false
+            return
         }
         logger.info(`Write in file`)
     })
-    return true
 }
 
 
@@ -53,7 +51,7 @@ const addNewItem = (item, file) => {
     data.grocery_list.push(item)
     logger.info(`New item added!`)
 
-    fileWritten = writeItems(data, file)
+    writeItems(data, file)
 }
 
 // remove a specific item on the list
@@ -61,7 +59,7 @@ const removeSpecificItem = (name, file) => {
     data.grocery_list = data.grocery_list.filter((item) => item.itemName !== name)
     logger.info(`Item is removed! Idempotent.`)
 
-    fileWritten = writeItems(data, file)
+    writeItems(data, file)
 }
 
 // to set purchase to true of a specific item
@@ -75,7 +73,7 @@ const toPurchase = (name, file) => {
                         })
     logger.info(`Item was purchased! Idempotent.`)
 
-    fileWritten = writeItems(data, file)
+    writeItems(data, file)
 }
 
 module.exports = {

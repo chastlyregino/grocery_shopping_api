@@ -21,11 +21,10 @@ const server = http.createServer((req, res) => {
             body = body.length > 0 ? JSON.parse(body) : {}
 
             const contentType = {'Content-Type': 'application/json'}
-            const { itemName, quantity, price } = body
 
             if (req.url.startsWith('/items')){
                 logger.info(req.url.split('/'))
-                //const itemToUpdate = req.url.split('/')[2]
+                const itemToUpdate = req.url.split('/')[2]
                 data = createFileIfNotExist(file)
 
                 switch(req.method){
@@ -37,6 +36,7 @@ const server = http.createServer((req, res) => {
                     break
                         
                     case 'POST':
+                        const { itemName, quantity, price } = body
                         if (!itemName || !quantity || !price){
                             logger.info(`POST method failed! Missing info`)
                             res.writeHead(400, contentType)
@@ -65,7 +65,7 @@ const server = http.createServer((req, res) => {
                     break
 
                     case 'PUT':
-                        if (!itemName){
+                        if (!itemToUpdate){
                             logger.info(`PUT method failed! Missing info`)
                             res.writeHead(400, contentType)
                             res.end(
@@ -87,7 +87,7 @@ const server = http.createServer((req, res) => {
                     break
 
                     case 'DELETE':
-                        if (!itemName){
+                        if (!itemToUpdate){
                             logger.info(`DELETE method failed! Missing info`)
                             res.writeHead(400, contentType)
                             res.end(

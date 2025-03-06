@@ -25,10 +25,6 @@ const truthyFile = 'data.json'
 const falsyFile = 'unexistentFile.json'
 
 describe('File and Data Manipulation', () => {
-    test('Check if data.json exists', () => {
-        //mockWriteItems.mockReturnValue(true)
-    })
-
     test('Creates the file after checking that it does not exist', () => {
         expect(fs.existsSync(falsyFile)).toBe(false)
         createFileIfNotExist(falsyFile)
@@ -37,19 +33,20 @@ describe('File and Data Manipulation', () => {
         expect(fs.existsSync(falsyFile)).toBe(false)
     })
 
-    test('Read contents of data.json and returns an object with array of objects', () => {
+    test('Read contents of existing file and returns an object with array of objects', () => {
+        writeItems(data, truthyFile)
+        expect(readItems(truthyFile)).toStrictEqual(data)
+    })
+
+    test('New item added to file', () => {
         
     })
 
-    test('New item added to data.json', () => {
+    test('Item removed from file', () => {
         
     })
 
-    test('Item removed from data.json', () => {
-        
-    })
-
-    test('Item "purchased" value updated to true in data.json', () => {
+    test('Item "purchased" value updated to true in file', () => {
         
     })
 })
