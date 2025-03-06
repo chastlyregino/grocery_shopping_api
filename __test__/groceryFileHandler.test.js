@@ -1,8 +1,6 @@
 const fs = require('node:fs')
 const { writeItems, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('.././groceryFileHandler.js')
 
-const mockReadItems = jest.fn()
-
 const data = {
     grocery_list: [
         {

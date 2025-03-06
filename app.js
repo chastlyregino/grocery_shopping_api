@@ -74,7 +74,7 @@ const server = http.createServer((req, res) => {
                                 })
                             )
                         } else {
-                            toPurchase(itemName.toLowerCase(), file)
+                            toPurchase(itemToUpdate.toLowerCase(), file)
                             data = readItems(file)
 
                             res.statusCode = 200
@@ -82,7 +82,7 @@ const server = http.createServer((req, res) => {
                                 message: `Item is marked as purchased! Updated List: `, data
                             }))
 
-                            logger.info(`PUT method item updated: ${itemName}`)
+                            logger.info(`PUT method item updated: ${itemToUpdate}`)
                         }
                     break
 
@@ -96,7 +96,7 @@ const server = http.createServer((req, res) => {
                                 })
                             )
                         } else {
-                            removeSpecificItem(itemName.toLowerCase(), file)
+                            removeSpecificItem(itemToUpdate.toLowerCase(), file)
                             data = readItems(file)
 
                             res.statusCode = 200
@@ -104,7 +104,7 @@ const server = http.createServer((req, res) => {
                                 message: `Item deleted from the list! Updated List: `, data
                             }))
 
-                            logger.info(`DELETE method item removed: ${itemName}`)
+                            logger.info(`DELETE method item removed: ${itemToUpdate}`)
                         }
                     break
 
