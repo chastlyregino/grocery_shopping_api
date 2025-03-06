@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
             if (req.url.startsWith('/items')){
                 logger.info(req.url.split('/'))
                 //const itemToUpdate = req.url.split('/')[2]
-                createFileIfNotExist()
+                data = createFileIfNotExist(file)
 
                 switch(req.method){
                     case 'GET':

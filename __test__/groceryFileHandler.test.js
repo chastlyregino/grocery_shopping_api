@@ -1,6 +1,7 @@
-jest.mock('fs')
+const fs = require('node:fs')
 const { writeItems, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('.././groceryFileHandler.js')
 
+//jest.mock('fs')
 const mockwriteItems = jest.fn()
 
 const data = {
@@ -20,15 +21,20 @@ const data = {
     ]
 }
 
-const file = 'data.json'
+const truthyFile = 'data.json'
+const falsyFile = 'unexistentFile.json'
 
 describe('File and Data Manipulation', () => {
     test('Check if data.json exists', () => {
-        mockWriteItems.mockReturnValue(true)
+        //mockWriteItems.mockReturnValue(true)
     })
 
-    test('Creates data.json after checking not exist', () => {
-
+    test('Creates the file after checking that it does not exist', () => {
+        expect(fs.existsSync(falsyFile)).toBe(false)
+        createFileIfNotExist(falsyFile)
+        expect(fs.existsSync(falsyFile)).toBe(true)
+        fs.unlinkSync(falsyFile)
+        expect(fs.existsSync(falsyFile)).toBe(false)
     })
 
     test('Read contents of data.json and returns an object with array of objects', () => {

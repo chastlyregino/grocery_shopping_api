@@ -3,7 +3,7 @@ This file handles all fs functions and object handling needed
 */
 
 const { logger } = require('./util/logger.js')
-const fs = require('node:fs');
+const fs = require('node:fs')
 
 let data = {grocery_list:[]}
 let fileWritten = false
@@ -25,6 +25,7 @@ const createFileIfNotExist = (file) => {
         fileWritten = writeItems(data, file)
         logger.info(`File created!`)
     }
+    return data
 }
 
 // write Items to file
