@@ -18,6 +18,12 @@ const data = {
             quantity: 6,
             price: 1,
             purchased: false
+        },
+        {
+            itemName: 'grapes',
+            quantity: 2,
+            price: 5,
+            purchased: false
         }
     ]
 }
@@ -31,6 +37,7 @@ const newItem = {
 
 const truthyFile = 'data.json'
 const falsyFile = 'unexistentFile.json'
+const itemToUpdate = 'banana'
 
 describe('File and Data Manipulation', () => {
     test('Creates the file after checking that it does not exist', () => {
@@ -42,27 +49,38 @@ describe('File and Data Manipulation', () => {
     })
 
     test('Read contents of existing file and returns an object with array of objects', () => {
-        tempData = readItems(truthyFile)
-        writeItems(data, truthyFile)
+        tempData = readItems(truthyFile)//
+        writeItems(data, truthyFile)//
         expect(readItems(truthyFile)).toStrictEqual(data)
-        writeItems(tempData, truthyFile)
+        writeItems(tempData, truthyFile)//
     })
 
     test('New item added to file', () => {
-        tempData = readItems(truthyFile)
-        writeItems(data, truthyFile)
+        tempData = readItems(truthyFile)//
+        writeItems(data, truthyFile)//
         addNewItem(newItem, truthyFile)
         newData = readItems(truthyFile)
         const list = newData.grocery_list
         expect(list[list.length - 1]).toStrictEqual(newItem)
-        writeItems(tempData, truthyFile)
+        writeItems(tempData, truthyFile)//
     })
 
     test('Item removed from file', () => {
-        
+        tempData = readItems(truthyFile)//
+        writeItems(data, truthyFile)//
+        removeSpecificItem(itemToUpdate, truthyFile)
+        newData = readItems(truthyFile)
+        expect(newData.grocery_list.includes(itemToUpdate)).toBe(false)
+        writeItems(tempData, truthyFile)//
     })
 
     test('Item "purchased" value updated to true in file', () => {
-        
+        tempData = readItems(truthyFile)//
+        writeItems(data, truthyFile)//
+        toPurchase(itemToUpdate, truthyFile)
+        newData = readItems(truthyFile)
+        const isItemPurchased = newData.grocery_list.find((item) => item === itemToUpdate)
+        expect(isItemPurchased.purchased).toBe(true)
+        writeItems(tempData, truthyFile)//
     })
 })

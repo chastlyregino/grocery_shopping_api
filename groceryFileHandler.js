@@ -76,6 +76,9 @@ const toPurchase = (name, file) => {
     writeItems(data, file)
 }
 
+readItems('data.json')
+console.log(data.grocery_list.find(({itemName}) => itemName === 'banana'))
+
 module.exports = {
     item,
     createFileIfNotExist,
