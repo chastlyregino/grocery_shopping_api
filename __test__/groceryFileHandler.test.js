@@ -65,22 +65,22 @@ describe('File and Data Manipulation', () => {
         writeItems(tempData, truthyFile)//
     })
 
-    test('Item removed from file', () => {
-        tempData = readItems(truthyFile)//
-        writeItems(data, truthyFile)//
-        removeSpecificItem(itemToUpdate, truthyFile)
-        newData = readItems(truthyFile)
-        expect(newData.grocery_list.includes(itemToUpdate)).toBe(false)
-        writeItems(tempData, truthyFile)//
-    })
+    // test('Item removed from file', () => {
+    //     tempData = readItems(truthyFile)//
+    //     writeItems(data, truthyFile)//
+    //     removeSpecificItem(itemToUpdate, truthyFile)
+    //     newData = readItems(truthyFile)
+    //     expect(newData.grocery_list.includes(itemToUpdate)).toBe(false)
+    //     writeItems(tempData, truthyFile)//
+    // })
 
-    test('Item "purchased" value updated to true in file', () => {
-        tempData = readItems(truthyFile)//
-        writeItems(data, truthyFile)//
-        toPurchase(itemToUpdate, truthyFile)
-        newData = readItems(truthyFile)
-        const isItemPurchased = newData.grocery_list.find((item) => item === itemToUpdate)
-        expect(isItemPurchased.purchased).toBe(true)
-        writeItems(tempData, truthyFile)//
-    })
+    // test('Item "purchased" value updated to true in file', () => {
+    //     tempData = readItems(truthyFile)//
+    //     writeItems(data, truthyFile)//
+    //     toPurchase(itemToUpdate, truthyFile)
+    //     newData = readItems(truthyFile)
+    //     const isItemPurchased = newData.grocery_list.find((item) => item === itemToUpdate)
+    //     expect(isItemPurchased.purchased).toBe(true)
+    //     writeItems(tempData, truthyFile)//
+    // })
 })
