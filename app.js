@@ -64,27 +64,47 @@ const server = http.createServer((req, res) => {
                     break
 
                     case 'PUT':
-                        toPurchase(itemName.toLowerCase())
-                        data = readItems()
+                        if (!itemName){
+                            logger.info(`PUT method failed! Missing info`)
+                            res.writeHead(400, contentType)
+                            res.end(
+                                JSON.stringify({
+                                    message: 'Please provide a valid name'
+                                })
+                            )
+                        } else {
+                            toPurchase(itemName.toLowerCase())
+                            data = readItems()
 
-                        res.statusCode = 200
-                        res.end(JSON.stringify({
-                            message: `Item is marked as purchased! Updated List: `, data
-                        }))
+                            res.statusCode = 200
+                            res.end(JSON.stringify({
+                                message: `Item is marked as purchased! Updated List: `, data
+                            }))
 
-                        logger.info(`PUT method item updated: ${itemName}`)
+                            logger.info(`PUT method item updated: ${itemName}`)
+                        }
                     break
 
                     case 'DELETE':
-                        removeSpecificItem(itemName.toLowerCase())
-                        data = readItems()
+                        if (!itemName){
+                            logger.info(`DELETE method failed! Missing info`)
+                            res.writeHead(400, contentType)
+                            res.end(
+                                JSON.stringify({
+                                    message: 'Please provide a valid name'
+                                })
+                            )
+                        } else {
+                            removeSpecificItem(itemName.toLowerCase())
+                            data = readItems()
 
-                        res.statusCode = 200
-                        res.end(JSON.stringify({
-                            message: `Item deleted from the list! Updated List: `, data
-                        }))
+                            res.statusCode = 200
+                            res.end(JSON.stringify({
+                                message: `Item deleted from the list! Updated List: `, data
+                            }))
 
-                        logger.info(`DELETE method item removed: ${itemName}`)
+                            logger.info(`DELETE method item removed: ${itemName}`)
+                        }
                     break
 
                     default:
