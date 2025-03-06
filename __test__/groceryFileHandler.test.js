@@ -4,6 +4,7 @@ const { writeItems, createFileIfNotExist, readItems, addNewItem, removeSpecificI
 //jest.mock('fs')
 const mockwriteItems = jest.fn()
 
+let tempData, newData
 const data = {
     grocery_list: [
         {
@@ -21,6 +22,13 @@ const data = {
     ]
 }
 
+const newItem = {
+    itemName: 'pear',
+    quantity: 5,
+    price: 2,
+    purchased: false
+}
+
 const truthyFile = 'data.json'
 const falsyFile = 'unexistentFile.json'
 
@@ -34,12 +42,20 @@ describe('File and Data Manipulation', () => {
     })
 
     test('Read contents of existing file and returns an object with array of objects', () => {
+        tempData = readItems(truthyFile)
         writeItems(data, truthyFile)
         expect(readItems(truthyFile)).toStrictEqual(data)
+        writeItems(tempData, truthyFile)
     })
 
     test('New item added to file', () => {
-        
+        tempData = readItems(truthyFile)
+        writeItems(data, truthyFile)
+        addNewItem(newItem, truthyFile)
+        newData = readItems(truthyFile)
+        const list = newData.grocery_list
+        expect(list[list.length - 1]).toStrictEqual(newItem)
+        writeItems(tempData, truthyFile)
     })
 
     test('Item removed from file', () => {
