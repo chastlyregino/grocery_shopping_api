@@ -7,6 +7,7 @@ const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, t
 const http = require('http')
 
 const PORT = 3000
+const file = 'data.json'
 
 const server = http.createServer((req, res) => {
     let body = ''
@@ -29,7 +30,7 @@ const server = http.createServer((req, res) => {
 
                 switch(req.method){
                     case 'GET':
-                        data = readItems()
+                        data = readItems(file)
                         logger.info(`GET method display items`)
                         res.statusCode = 200
                         res.end(JSON.stringify({message: data}))
@@ -50,7 +51,7 @@ const server = http.createServer((req, res) => {
                             itemObject.quantity = quantity
                             itemObject.price = price
                             itemObject.purchased = false
-                            addNewItem(itemObject)
+                            addNewItem(itemObject, file)
 
                             res.end(
                                 JSON.stringify({
@@ -73,8 +74,8 @@ const server = http.createServer((req, res) => {
                                 })
                             )
                         } else {
-                            toPurchase(itemName.toLowerCase())
-                            data = readItems()
+                            toPurchase(itemName.toLowerCase(), file)
+                            data = readItems(file)
 
                             res.statusCode = 200
                             res.end(JSON.stringify({
@@ -95,8 +96,8 @@ const server = http.createServer((req, res) => {
                                 })
                             )
                         } else {
-                            removeSpecificItem(itemName.toLowerCase())
-                            data = readItems()
+                            removeSpecificItem(itemName.toLowerCase(), file)
+                            data = readItems(file)
 
                             res.statusCode = 200
                             res.end(JSON.stringify({
