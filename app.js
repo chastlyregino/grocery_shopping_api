@@ -8,7 +8,6 @@ const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, t
 const app = express()
 const PORT = 3000
 const file = 'data.json'
-const contentType = {'Content-Type': 'application/json'}
 let data = createFileIfNotExist(file)
 
 app.use(express.json())
