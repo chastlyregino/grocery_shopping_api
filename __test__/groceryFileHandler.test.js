@@ -33,7 +33,7 @@ const newItem = {
     purchased: false
 }
 
-const truthyFile = 'testData.json'
+const truthyFile = './__test__/testData.json'
 const falsyFile = 'unexistentFile.json'
 const itemToUpdate = 'banana'
 
@@ -47,7 +47,7 @@ describe('File Manipulation', () => {
     })
 })
 
-describe('File and Data Manipulation', () => {
+describe('Data Manipulation', () => {
     beforeEach(() => {
         fs.writeFileSync(truthyFile, JSON.stringify(data), 'utf8', (err) => {
             if(err){
@@ -55,6 +55,10 @@ describe('File and Data Manipulation', () => {
                 return
             }
         })
+    })
+
+    afterEach(() => {
+        fs.unlinkSync(truthyFile)
     })
 
     test('Write contents to a file', () => {
