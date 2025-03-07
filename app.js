@@ -53,6 +53,7 @@ const server = http.createServer((req, res) => {
                             itemObject.purchased = false
                             addNewItem(itemObject, file)
 
+                            res.statusCode = 200
                             res.end(
                                 JSON.stringify({
                                     message: 'Item Added to List!',

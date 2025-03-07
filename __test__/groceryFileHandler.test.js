@@ -1,6 +1,7 @@
 const fs = require('node:fs')
 const { writeItems, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('.././groceryFileHandler.js')
 
+let newData
 const data = {
     grocery_list: [
         {
@@ -46,10 +47,18 @@ describe('File Manipulation', () => {
 })
 
 describe('File and Data Manipulation', () => {
-    let newData
-
     beforeEach(() => {
-        writeItems(data, truthyFile)
+        fs.writeFileSync(truthyFile, JSON.stringify(data), 'utf8', (err) => {
+            if(err){
+                console.error(err)
+                return
+            }
+        })
+    })
+
+    test('Write contents to a file', () => {
+        writeItems('new content', truthyFile)
+        expect(readItems(truthyFile)).toStrictEqual('new content')
     })
 
     test('Read contents of existing file and returns an object with array of objects', () => {
