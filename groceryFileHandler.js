@@ -7,13 +7,6 @@ const fs = require('node:fs')
 
 let data = {grocery_list:[]}
 
-const item = () => {
-    this.itemName = itemName,
-    this.quantity = quantity,
-    this.price = price,
-    this.purchased = purchased
-}
-
 // This checks if the file exists and creates it if none exists
 const createFileIfNotExist = (file) => {
     if (fs.existsSync(file)) {
@@ -29,13 +22,8 @@ const createFileIfNotExist = (file) => {
 
 // write Items to file
 const writeItems = (items, file) => {
-    fs.writeFileSync(file, JSON.stringify(items), 'utf8', (err) => {
-        if(err){
-            console.error(err)
-            return
-        }
-        logger.info(`Write in file`)
-    })
+    fs.writeFileSync(file, JSON.stringify(items), 'utf8')
+    logger.info(`Write in file`)
 }
 
 
@@ -77,7 +65,6 @@ const toPurchase = (name, file) => {
 }
 
 module.exports = {
-    item,
     createFileIfNotExist,
     writeItems,
     readItems,

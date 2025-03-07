@@ -49,12 +49,7 @@ describe('File Manipulation', () => {
 
 describe('Data Manipulation', () => {
     beforeEach(() => {
-        fs.writeFileSync(truthyFile, JSON.stringify(data), 'utf8', (err) => {
-            if(err){
-                console.error(err)
-                return
-            }
-        })
+        fs.writeFileSync(truthyFile, JSON.stringify(data), 'utf8')
     })
 
     afterEach(() => {
