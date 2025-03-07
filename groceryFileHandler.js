@@ -8,7 +8,7 @@ const fs = require('node:fs')
 let data = {grocery_list:[]}
 
 const item = () => {
-    this.gname = gname,
+    this.itemName = itemName,
     this.quantity = quantity,
     this.price = price,
     this.purchased = purchased
