@@ -2,6 +2,7 @@ const fs = require('node:fs')
 const { writeItems, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('.././groceryFileHandler.js')
 
 let newData
+
 const data = {
     grocery_list: [
         {
@@ -67,21 +68,19 @@ describe('File and Data Manipulation', () => {
 
     test('New item added to file', () => {
         addNewItem(newItem, truthyFile)
-        newData = readItems(truthyFile)
-        const list = newData.grocery_list
-        expect(list[list.length - 1]).toStrictEqual(newItem)
+        newData = readItems(truthyFile).grocery_list // returns the array of updated file
+        expect(newData[newData.length - 1]).toStrictEqual(newItem)
     })
 
     test('Item "purchased" value updated to true in file', () => {
         toPurchase(itemToUpdate, truthyFile)
-        newData = readItems(truthyFile)
-        const isItemPurchased = newData.grocery_list.find(({itemName}) => itemName === itemToUpdate )
-        expect(isItemPurchased.purchased).toBe(true)
+        newData = readItems(truthyFile).grocery_list.find(({itemName}) => itemName === itemToUpdate ) // returns the object of updated file
+        expect(newData.purchased).toBe(true)
     })
 
     test('Item removed from file', () => {
         removeSpecificItem(itemToUpdate, truthyFile)
-        newData = readItems(truthyFile)
-        expect(newData.grocery_list.includes(itemToUpdate)).toBe(false)
+        newData = readItems(truthyFile).grocery_list // returns the array of updated file
+        expect(newData.includes(itemToUpdate)).toBe(false)
     })
 })
