@@ -12,7 +12,7 @@ const item = () => {
     this.quantity = quantity,
     this.price = price,
     this.purchased = purchased
-}
+} //needed
 
 // This checks if the file exists and creates it if none exists
 const createFileIfNotExist = (file) => {
