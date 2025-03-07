@@ -17,7 +17,7 @@ const item = () => {
 // This checks if the file exists and creates it if none exists
 const createFileIfNotExist = (file) => {
     if (fs.existsSync(file)) {
-        data = JSON.parse(fs.readFileSync(file, 'utf8'))
+        data = readItems(file)
         logger.info(`File exists`)
     } else {
         logger.info(`File does not exist`)
@@ -36,13 +36,13 @@ const writeItems = (items, file) => {
 
 // reads the Items of data.json
 const readItems = (file) => {
-    data = JSON.parse(fs.readFileSync(file, 'utf8'))
     logger.info(`Items read!`)
-    return data
+    return JSON.parse(fs.readFileSync(file, 'utf8'))
 }
 
 // add new item to the list
 const addNewItem = (item, file) => {
+    data = readItems(file)
     data.grocery_list.push(item)
     logger.info(`New item added!`)
 
@@ -51,6 +51,7 @@ const addNewItem = (item, file) => {
 
 // remove a specific item on the list
 const removeSpecificItem = (name, file) => {
+    data = readItems(file)
     data.grocery_list = data.grocery_list.filter((item) => item.itemName !== name)
     logger.info(`Item is removed! Idempotent.`)
 
@@ -59,6 +60,7 @@ const removeSpecificItem = (name, file) => {
 
 // to set purchase to true of a specific item
 const toPurchase = (name, file) => {
+    data = readItems(file)
     data.grocery_list = data.grocery_list
                         .map((item) => {
                             if (item.itemName === name) {
