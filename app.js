@@ -3,7 +3,7 @@ This file handles all HTTP requests and response.
 */
 
 const { logger } = require('./util/logger.js')
-const { createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('./groceryFileHandler.js')
+const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('./groceryFileHandler.js')
 const http = require('http')
 
 const PORT = 3000
