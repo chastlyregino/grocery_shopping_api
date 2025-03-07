@@ -8,6 +8,7 @@ const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, t
 const app = express()
 const PORT = 3000
 const file = 'data.json'
+const contentType = {'Content-Type': 'application/json'}
 let data = createFileIfNotExist(file)
 
 app.use(express.json())
@@ -24,11 +25,7 @@ app.post('/items', (req, res) => {
 
     if (!itemName || !quantity || !price){
         logger.info(`POST method failed! Missing info`)
-        res.writeHead(400, contentType)
-        res.render(JSON.stringify({
-                    error: 'Please provide a valid name, quantity, and price'
-                    })
-        )
+        res.status(400).send(JSON.stringify({error: 'Please provide a valid name, quantity, and price'}))
     } else {
         const itemObject = Object.create(item)
         itemObject.itemName = itemName.toLowerCase(),
@@ -72,13 +69,11 @@ app.delete('/items/:itemName', (req, res) => {
     logger.info(`DELETE method item removed: ${req.params.itemName}`)
 })
 
-// app.METHOD('/*|/items/*', (req, res) => {
-//     res.statusCode = 405
-//     res.render('error', JSON.stringify({
-//         message: `Method unsupported`}))
+app.all('/items', (req, res) => {
+    res.status(405).send(JSON.stringify({error: `Method unsupported`}))
 
-//     logger.info(`Method unsupported`)
-// })
+    logger.info(`Method unsupported`)
+})
 
 app.listen(PORT, () => {
     logger.info(`Server is listening on http://localhost:${PORT}`)
