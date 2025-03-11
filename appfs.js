@@ -3,40 +3,35 @@ This file handles all HTTP requests and response.
 */
 const express = require('express')
 const { logger } = require('./util/logger.js')
-const groceryService = require('./service/groceryService.js')
-const { item } = require('./repository/groceryDAO.js')
+const { item, createFileIfNotExist, readItems, addNewItem, removeSpecificItem, toPurchase } = require('./groceryFileHandler.js')
 
 const app = express()
 const PORT = 3000
 const file = 'data.json'
-let data = groceryService.getItems()
+let data = createFileIfNotExist(file)
 
 app.use(express.json())
 
 app.get('/items', (req, res) => {
-    data = groceryService.getItems()
-            .then(data => {
-                logger.info(`GET method display items`)
-                console.log(data)
-                res.statusCode = 200
-                res.send(JSON.stringify(data))
-            })
-            .catch(err => console.error(err));
+    data = readItems(file)
+    logger.info(`GET method display items`)
+    res.statusCode = 200
+    res.send(JSON.stringify({message: data}))
 })
 
 app.post('/items', (req, res) => {
-    const { item_name, quantity, price } = req.body
+    const { itemName, quantity, price } = req.body
 
-    if (!item_name || !quantity || !price){
+    if (!itemName || !quantity || !price){
         logger.info(`POST method failed! Missing info`)
         res.status(400).send(JSON.stringify({error: 'Please provide a valid name, quantity, and price'}))
     } else {
         const itemObject = Object.create(item)
-        itemObject.item_name = item_name.toLowerCase(),
+        itemObject.itemName = itemName.toLowerCase(),
         itemObject.quantity = quantity
         itemObject.price = price
         itemObject.purchased = false
-        groceryService.createItem(itemObject)
+        addNewItem(itemObject, file)
         
         res.statusCode = 200
         res.send(JSON.stringify({
@@ -45,32 +40,32 @@ app.post('/items', (req, res) => {
                     })
         )
         
-        logger.info(`POST method info added: ${item_name}, ${quantity}, ${price}`)
+        logger.info(`POST method info added: ${itemName}, ${quantity}, ${price}`)
     }                            
 })
 
-app.put('/items/:item_name', (req, res) => {
-    groceryService.updateItem(req.params.item_name)
-    data = groceryService.getItems()
+app.put('/items/:itemName', (req, res) => {
+    toPurchase(req.params.itemName, file)
+    data = readItems(file)
 
     res.statusCode = 200
     res.send(JSON.stringify({
         message: `Item is marked as purchased! Updated List: `, data
         }))
     
-    logger.info(`PUT method item updated: ${req.params.item_name}`)
+    logger.info(`PUT method item updated: ${req.params.itemName}`)
 })
 
-app.delete('/items/:item_name', (req, res) => {
-    groceryService.deleteItem(req.params.item_name, file)
-    data = groceryService.getItems()
+app.delete('/items/:itemName', (req, res) => {
+    removeSpecificItem(req.params.itemName, file)
+    data = readItems(file)
 
     res.statusCode = 200
     res.send(JSON.stringify({
         message: `Item deleted from the list! Updated List: `, data
         }))
     
-    logger.info(`DELETE method item removed: ${req.params.item_name}`)
+    logger.info(`DELETE method item removed: ${req.params.itemName}`)
 })
 
 app.all('/items', (req, res) => {
