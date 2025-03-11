@@ -9,7 +9,7 @@ const item = () => {
     this.itemName = itemName,
     this.quantity = quantity,
     this.price = price,
-    this.purchased = purchased
+    this.is_purchase = is_purchase
 } 
 
 async function createItem(item){
@@ -29,13 +29,11 @@ async function createItem(item){
 
 async function getItems(){
     const command = new ScanCommand({
-        TableName: 'Grocery-items'//,
-       // Key: {item_name}
+        TableName: 'Grocery-items'
     })
 
     try{
         const data = await documentClient.send(command)
-        console.log(data.Items)
         return data.Items
     }catch(err){
         console.error(err)
@@ -58,28 +56,28 @@ async function deleteItem(item_name){
     }
 }
 
-// async function updateItem(item_name){
-//     const command = new DeleteCommand({
-//         TableName: 'Grocery-items',
-//         Key: {item_name},
-//         UpdateExpression: "set is_purchase = :i_p",
-//         ExpressionAttributeValues: {":i_p": true}
-//     })
+async function updateItem(item_name){
+    const command = new UpdateCommand({
+        TableName: 'Grocery-items',
+        Key: {item_name},
+        UpdateExpression: "set is_purchase = :i_p",
+        ExpressionAttributeValues: {":i_p": true}
+    })
 
 
-//     try{
-//         await documentClient.send(command)
-//         return item_name
-//     }catch(err){
-//         console.error(err)
-//         return null
-//     }
-// }
+    try{
+        await documentClient.send(command)
+        return item_name
+    }catch(err){
+        console.error(err)
+        return null
+    }
+}
 
 module.exports = {
     item,
     createItem,
     getItems,
-    deleteItem//,
-    //updateItem
+    deleteItem,
+    updateItem
 }

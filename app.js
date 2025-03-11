@@ -17,7 +17,7 @@ app.get('/items', (req, res) => {
     data = groceryService.getItems()
             .then(data => {
                 logger.info(`GET method display items`)
-                console.log(data)
+
                 res.statusCode = 200
                 res.send(JSON.stringify(data))
             })
@@ -35,42 +35,55 @@ app.post('/items', (req, res) => {
         itemObject.item_name = item_name.toLowerCase(),
         itemObject.quantity = quantity
         itemObject.price = price
-        itemObject.purchased = false
+        itemObject.is_purchase = false
         groceryService.createItem(itemObject)
+        .then(data => {
+            res.statusCode = 200
+            res.send(JSON.stringify({
+                        message: 'Item Added to List!',
+                        itemObject
+                        })
+            )
+            
+            logger.info(`POST method info added: ${item_name}, ${quantity}, ${price}`)
+        })
+        .catch(err => console.error(err))
         
-        res.statusCode = 200
-        res.send(JSON.stringify({
-                    message: 'Item Added to List!',
-                    itemObject
-                    })
-        )
-        
-        logger.info(`POST method info added: ${item_name}, ${quantity}, ${price}`)
     }                            
 })
 
 app.put('/items/:item_name', (req, res) => {
     groceryService.updateItem(req.params.item_name)
-    data = groceryService.getItems()
-
-    res.statusCode = 200
-    res.send(JSON.stringify({
-        message: `Item is marked as purchased! Updated List: `, data
-        }))
-    
-    logger.info(`PUT method item updated: ${req.params.item_name}`)
+    .then(incomingData => {
+        data = groceryService.getItems()
+        .then(data => {
+            res.statusCode = 200
+            res.send(JSON.stringify({
+                message: `Item is marked as purchased! Updated List: `, data
+                }))
+            
+            logger.info(`PUT method item updated: ${incomingData.result}`)
+        })
+        .catch(err => console.error(err))
+    })
+    .catch(err => console.error(err))
 })
 
 app.delete('/items/:item_name', (req, res) => {
-    groceryService.deleteItem(req.params.item_name, file)
-    data = groceryService.getItems()
-
-    res.statusCode = 200
-    res.send(JSON.stringify({
-        message: `Item deleted from the list! Updated List: `, data
-        }))
-    
-    logger.info(`DELETE method item removed: ${req.params.item_name}`)
+    groceryService.deleteItem(req.params.item_name)
+    .then(incomingData => {
+        data = groceryService.getItems()
+        .then(data => {
+            res.statusCode = 200
+            res.send(JSON.stringify({
+                message: `Item deleted from the list! Updated List: `, data
+                }))
+            
+            logger.info(`DELETE method item removed: ${incomingData.item_name}`)
+        })
+        .catch(err => console.error(err))
+    })
+    .catch(err => console.error(err))
 })
 
 app.all('/items', (req, res) => {
